@@ -103,8 +103,8 @@ var Main = (function (_super) {
         this.addChild(monster_0);
         monster_0.scaleX = 0.5;
         monster_0.scaleY = 0.5;
-        monster_0.x = stageW / 2;
-        monster_0.y = stageH / 4;
+        monster_0.x = 0;
+        monster_0.y = stageH / 2;
         TaskService.getInstance().addTask(task01);
         TaskService.getInstance().addTask(task02);
         var missionPanel = new TaskPanel();
@@ -133,11 +133,30 @@ var Main = (function (_super) {
             missionPanel.initTaskPanel(missionPanel);
         }, this);
     };
+    p.initUserPanel = function () {
+        var user = new User();
+        var skilledTechnician = new Technician(TechnicianQuality.SKILLED, 'Skilled - FireCtrl');
+        var SKC34 = new Equipment(EquipmentType.CANNON, 'SKC34');
+        var PrinzEugen = new Ship(ShipType.CA, 'PrinzEugen');
+        user.ships.push(PrinzEugen);
+        PrinzEugen.setInTeam(true);
+        user.checkInTeam();
+        PrinzEugen.equipments.push(SKC34);
+        SKC34.technicians.push(skilledTechnician);
+        console.log(user);
+        console.log(user.calFightPower());
+        var showPanel = new ShowPanel(this.stage.stageWidth, this.stage.stageHeight, PrinzEugen, SKC34, skilledTechnician);
+        showPanel.x = 0;
+        showPanel.y = 640;
+        this.addChild(showPanel);
+    };
     /**
      * 创建游戏场景
      * Create a game scene
      */
     p.createGameScene = function () {
+        var myscene = new GameScene();
+        GameScene.replaceScene(myscene);
         var myGrid = new Grid(10, 10);
         var myRoad = new Array();
         var myMap = new TileMap(myGrid);
@@ -146,80 +165,34 @@ var Main = (function (_super) {
         this.addChild(player);
         player.x = 32;
         player.y = 32;
+        GameScene.setPlayer(player);
         this.touchEnabled = true;
-        var index = 0;
-        var isStartJudge = false;
-        function moveJudge() {
-            var _this = this;
-            var timeCal = new egret.Timer(1000, 0);
-            timeCal.start();
-            console.log("Start Judege ?" + isStartJudge);
-            timeCal.addEventListener(egret.TimerEvent.TIMER, function () {
-                //console.log("call back");
-                if (isStartJudge) {
-                    console.log("Onposition ? " + player._moveState.isOnposition);
-                    if (myRoad.length == 1) {
-                        console.log("roadLength end stay");
-                        return;
-                    }
-                    if (player.x == myRoad[index].x * Main.TILESIZE + Main.TILESIZE / 2 && player.y == myRoad[index].y * Main.TILESIZE + Main.TILESIZE / 2) {
-                        index++; ///// to 0 when is out 
-                        player.move(new Vector2(myRoad[index].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[index].y * Main.TILESIZE + Main.TILESIZE / 2));
-                        console.log("current index " + index);
-                        if (index == myRoad.length - 1) {
-                            timeCal.removeEventListener(egret.TimerEvent.TIMER, function () { }, _this);
-                            index = 0;
-                            isStartJudge = false;
-                        }
-                    }
-                }
-                console.log("Start Judege ?" + isStartJudge);
-            }, this);
-        }
-        /*
-                function moveJudge2() {
-        
-                    egret.Ticker.getInstance().register(() => {
-        
-                        if (player._moveState.isOnposition) {
-                            index++;///// to 0 when is out
-                            console.log("current index " + index);
-                        }
-        
-                    }, this);
-                }
-        */
         //this.stage
         myMap.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
-            console.log("tap_px " + e.stageX + "," + e.stageY);
-            myMap.grid.setEndPoint(Math.floor(e.stageX / Main.TILESIZE), Math.floor(e.stageY / Main.TILESIZE));
-            myMap.grid.setStartPoint(Math.floor(player.x / Main.TILESIZE), Math.floor(player.y / Main.TILESIZE));
-            myRoad = myMap.findPath();
-            /*
-            var targetX = myRoad[index].x * 64 + 64 / 2;
-            var targetY = myRoad[index].y * 64 + 64 / 2;
-
-            var dx = targetX - player.x;
-            var dy = targetY - player.y;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-*/
-            if (myRoad == null) {
-                console.log("error tip stay");
-                return;
+            function getWalkCommand() {
+                console.log("tap_px " + e.stageX + "," + e.stageY);
+                myMap.grid.setEndPoint(Math.floor(e.stageX / Main.TILESIZE), Math.floor(e.stageY / Main.TILESIZE));
+                myMap.grid.setStartPoint(Math.floor(player.x / Main.TILESIZE), Math.floor(player.y / Main.TILESIZE));
+                myRoad = myMap.findPath();
+                if (myRoad == null) {
+                    console.log("error tip stay");
+                    return;
+                }
+                for (var i = 0; i < myRoad.length; i++) {
+                    GameScene.commandList.addCommand(new WalkCommand(myRoad[i].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[i].y * Main.TILESIZE + Main.TILESIZE / 2));
+                }
+                GameScene.commandList.execute();
             }
-            isStartJudge = true;
-            player.move(new Vector2(myRoad[index].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[index].y * Main.TILESIZE + Main.TILESIZE / 2));
-            moveJudge();
-            /*
-                                   if (dist < 1) {
-                                       index++;
-                                       if (index = myRoad.length) {
-                                           this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, (e: egret.TouchEvent) => { }, this);
-                                       }
-                                       player.x == myRoad[index].x * 64 + 64 / 2 && player.y == myRoad[index].y * 64 + 64 / 2
-            */
+            if (GameScene.commandList.isFinishedFlag) {
+                getWalkCommand();
+            }
+            else {
+                GameScene.commandList.cancel();
+                getWalkCommand();
+            }
         }, this);
         this.initTaskSystem(this.stage.stageWidth, this.stage.stageHeight);
+        this.initUserPanel();
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

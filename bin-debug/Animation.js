@@ -1,6 +1,5 @@
 var Animation = (function () {
     function Animation(anim, self, FPS) {
-        if (FPS === void 0) { FPS = 4; }
         this.FPS = 4;
         this.textureList = [];
         this.textureList = anim;

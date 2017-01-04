@@ -46,7 +46,7 @@ var IdleState = (function () {
     var d = __define,c=IdleState,p=c.prototype;
     p.EnterState = function () {
         this.Onidel = true;
-        this.player.curAnimation = new Animation(this.player.animationList[this.player.isLeftFacing ? "idle_left" : "idle_right"], this.player.appearance, 8);
+        this.player.curAnimation = new Animation(this.player.animationList[this.player.isLeftFacing ? "idle_left" : "idle_right"], this.player.appearance, 4);
     };
     p.DuringState = function (pass) {
         this.player.curAnimation.playCurcularly(pass);
@@ -72,12 +72,13 @@ var MoveState = (function () {
     var d = __define,c=MoveState,p=c.prototype;
     p.EnterState = function () {
         this.isOnposition = false;
+        GameScene.canMovetoNext = false;
         console.log("walk from:" + this.player.x.toFixed(1) + "  " + this.player.y.toFixed(1)
             + ", to:" + this.playerlocation.x.toFixed(1) + "  " + this.playerlocation.y.toFixed(1));
         //this.player.curAnimation
         //var nowFacing=this.player.isLeftFacing;
         this.player.curAnimation = new Animation(this.player
-            .animationList[this.player.isLeftFacing ? "walk_left" : "walk_right"], this.player.appearance, 8);
+            .animationList[this.player.isLeftFacing ? "walk_left" : "walk_right"], this.player.appearance, 4);
         var funcChange = function () {
             //console.log(this.x);
         };
@@ -101,6 +102,7 @@ var MoveState = (function () {
         this.OnMove = false;
         this.isOnposition = true;
         console.log("Get Target Location");
+        GameScene.canMovetoNext = true;
         // egret.Tween.removeTweens(this.player);
     };
     p.GetState = function () {

@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "description_json,Gamebg_jpg,idel4_L_png,move1_L_png,move3_L_png,move2_L_png,move4_L_png,idel1_L_png,idel2_L_png,idel3_L_png,move4_R_png,idel3_R_png,idel2_R_png,idel1_R_png,idel4_R_png,move1_R_png,move2_R_png,move3_R_png,tile_2_png,tile_1_png,npc_0_taskAcceptable_png,npc_0_taskDuring_png,npc_1_nullIcon_png,npc_0_taskFinish_png,npc_1_taskFinish_png,npc_1_taskAcceptable_png,npc_0_nullIcon_png,npc_1_taskDuring_png,Finish_png,Close_png,Accept_png,Kill_png,DialogueBg_png",
+			"keys": "description_json,Gamebg_jpg,idel4_L_png,move1_L_png,move3_L_png,move2_L_png,move4_L_png,idel1_L_png,idel2_L_png,idel3_L_png,move4_R_png,idel3_R_png,idel2_R_png,idel1_R_png,idel4_R_png,move1_R_png,move2_R_png,move3_R_png,tile_2_png,tile_1_png,npc_0_taskAcceptable_png,npc_0_taskDuring_png,npc_1_nullIcon_png,npc_0_taskFinish_png,npc_1_taskFinish_png,npc_1_taskAcceptable_png,npc_0_nullIcon_png,npc_1_taskDuring_png,Finish_png,Close_png,Accept_png,Kill_png,DialogueBg_png,S_Setuper_png,S_Prinz Eugen_jpg,S_FuMO25_png,S_SKC34_png,S_Watcher_png",
 			"name": "preload"
 		}
 	],
@@ -175,6 +175,31 @@
 			"url": "assets/DialogueBg.png",
 			"type": "image",
 			"name": "DialogueBg_png"
+		},
+		{
+			"url": "assets/S_Setuper.png",
+			"type": "image",
+			"name": "S_Setuper_png"
+		},
+		{
+			"url": "assets/S_Prinz Eugen.jpg",
+			"type": "image",
+			"name": "S_Prinz Eugen_jpg"
+		},
+		{
+			"url": "assets/S_FuMO25.png",
+			"type": "image",
+			"name": "S_FuMO25_png"
+		},
+		{
+			"url": "assets/S_SKC34.png",
+			"type": "image",
+			"name": "S_SKC34_png"
+		},
+		{
+			"url": "assets/S_Watcher.png",
+			"type": "image",
+			"name": "S_Watcher_png"
 		}
 	]
 }
