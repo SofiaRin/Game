@@ -109,18 +109,18 @@ var Main = (function (_super) {
         TaskService.getInstance().addTask(task02);
         var missionPanel = new TaskPanel();
         this.addChild(missionPanel);
-        var npc_0 = new NPC("npc_0");
+        var npc_0 = new NPC("npc_0", stageW / 4, stageH / 2);
         this.addChild(npc_0);
         npc_0.scaleX = 0.5;
         npc_0.scaleY = 0.5;
         npc_0.x = stageW / 4;
         npc_0.y = stageH / 2;
-        var npc_1 = new NPC("npc_1");
+        var npc_1 = new NPC("npc_1", stageW / 2.5, stageH / 4);
         this.addChild(npc_1);
         npc_1.scaleX = 0.5;
         npc_1.scaleY = 0.5;
         npc_1.x = stageW / 2.5;
-        npc_1.y = stageH / 4;
+        npc_1.y = stageH / 4; //在myMap 进行监听，如果点击位置位于NPC放置位置的周围，则在添加移动命令后，追加打开面板命令。
         TaskService.getInstance().addObserver(npc_0);
         TaskService.getInstance().addObserver(npc_1);
         TaskService.getInstance().addObserver(missionPanel);
@@ -157,9 +157,9 @@ var Main = (function (_super) {
     p.createGameScene = function () {
         var myscene = new GameScene();
         GameScene.replaceScene(myscene);
-        var myGrid = new Grid(10, 10);
-        var myRoad = new Array();
-        var myMap = new TileMap(myGrid);
+        var myGrid = GameScene.sceneGrid;
+        var myRoad = GameScene.sceneRoad;
+        var myMap = GameScene.sceneMap;
         this.addChild(myMap);
         var player = new Player();
         this.addChild(player);
@@ -169,15 +169,29 @@ var Main = (function (_super) {
         this.touchEnabled = true;
         //this.stage
         myMap.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            //var disNpc_0 = Math.sqrt(Math.pow(e.stageX - 640 / 4, 2) + Math.pow(e.stageY - 1236 / 2, 2));
+            // var disNpc_1 = Math.sqrt(Math.pow(e.stageX - 640 / 2.5, 2) + Math.pow(e.stageY - 1236 / 4, 2));
             function getWalkCommand() {
                 console.log("tap_px " + e.stageX + "," + e.stageY);
                 myMap.grid.setEndPoint(Math.floor(e.stageX / Main.TILESIZE), Math.floor(e.stageY / Main.TILESIZE));
                 myMap.grid.setStartPoint(Math.floor(player.x / Main.TILESIZE), Math.floor(player.y / Main.TILESIZE));
                 myRoad = myMap.findPath();
                 if (myRoad == null) {
-                    console.log("error tip stay");
+                    console.log("error tap stay");
                     return;
                 }
+                /*
+                if (disNpc_0 <= 4) {
+
+                    console.log("NPC_0 around")
+                }
+
+                if (disNpc_1 <= 4) {
+
+                    console.log("NPC_1 around")
+
+                }
+                */
                 for (var i = 0; i < myRoad.length; i++) {
                     GameScene.commandList.addCommand(new WalkCommand(myRoad[i].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[i].y * Main.TILESIZE + Main.TILESIZE / 2));
                 }

@@ -46,11 +46,15 @@ var FightCommand = (function () {
 }());
 egret.registerClass(FightCommand,'FightCommand',["Command"]);
 var TalkCommand = (function () {
-    function TalkCommand() {
+    function TalkCommand(_targetPanel) {
+        this.targetPanel = _targetPanel;
     }
     var d = __define,c=TalkCommand,p=c.prototype;
     p.execute = function (callback) {
         console.log("打开对话框");
+        var panelTw = egret.Tween.get(this.targetPanel);
+        panelTw.to({ "alpha": 1 }, 600);
+        this.targetPanel.touchEnabled = true;
         egret.setTimeout(function () {
             console.log("结束对话");
             callback();

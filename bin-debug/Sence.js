@@ -5,6 +5,9 @@ var GameScene = (function () {
     GameScene.replaceScene = function (scene) {
         GameScene.scene = scene;
         this.commandList = new CommandList();
+        GameScene.sceneGrid = new Grid(10, 10);
+        GameScene.sceneRoad = new Array();
+        GameScene.sceneMap = new TileMap(GameScene.sceneGrid);
     };
     GameScene.setPlayer = function (_player) {
         this.player = _player;

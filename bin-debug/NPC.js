@@ -1,8 +1,10 @@
 var NPC = (function (_super) {
     __extends(NPC, _super);
-    function NPC(_id) {
+    function NPC(_id, _npcMapPosX, _npcMapPosY) {
         _super.call(this);
         this.id = _id;
+        this.npcMapPosX = _npcMapPosX;
+        this.npcMapPosY = _npcMapPosY;
         this.emoji = this.createBitmapByName(_id + "_nullIcon_png");
         console.log("Building " + _id);
         this.addChild(this.emoji);
@@ -70,10 +72,19 @@ var NPC = (function (_super) {
         var _this = this;
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            var panelTw = egret.Tween.get(_this.dialoguePanel);
-            panelTw.to({ "alpha": 1 }, 600);
-            _this.dialoguePanel.touchEnabled = true;
             console.log("Tap_" + _this.id);
+            GameScene.sceneGrid.setEndPoint(Math.floor(_this.npcMapPosX / GameScene.TILESIZE), Math.floor(_this.npcMapPosY / GameScene.TILESIZE));
+            GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE), Math.floor(GameScene.player.y / GameScene.TILESIZE));
+            GameScene.sceneRoad = GameScene.sceneMap.findPath();
+            if (GameScene.sceneRoad == null) {
+                console.log("error tap stay");
+                return;
+            }
+            for (var i = 0; i < GameScene.sceneRoad.length; i++) {
+                GameScene.commandList.addCommand(new WalkCommand(GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2, GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+            }
+            GameScene.commandList.addCommand(new TalkCommand(_this.dialoguePanel));
+            GameScene.commandList.execute();
         }, this);
     };
     p.changeImage = function () {

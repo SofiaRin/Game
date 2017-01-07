@@ -27,13 +27,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
 class Main extends egret.DisplayObjectContainer {
 
 
@@ -147,7 +140,7 @@ class Main extends egret.DisplayObjectContainer {
         var missionPanel = new TaskPanel();
         this.addChild(missionPanel);
 
-        var npc_0 = new NPC("npc_0");
+        var npc_0 = new NPC("npc_0", stageW / 4, stageH / 2);
         this.addChild(npc_0);
         npc_0.scaleX = 0.5;
         npc_0.scaleY = 0.5;
@@ -155,12 +148,12 @@ class Main extends egret.DisplayObjectContainer {
         npc_0.y = stageH / 2;
 
 
-        var npc_1 = new NPC("npc_1");
+        var npc_1 = new NPC("npc_1", stageW / 2.5, stageH / 4);
         this.addChild(npc_1);
         npc_1.scaleX = 0.5;
         npc_1.scaleY = 0.5;
         npc_1.x = stageW / 2.5;
-        npc_1.y = stageH / 4;
+        npc_1.y = stageH / 4;//在myMap 进行监听，如果点击位置位于NPC放置位置的周围，则在添加移动命令后，追加打开面板命令。
 
         TaskService.getInstance().addObserver(npc_0);
         TaskService.getInstance().addObserver(npc_1);
@@ -215,11 +208,11 @@ class Main extends egret.DisplayObjectContainer {
         var myscene = new GameScene();
         GameScene.replaceScene(myscene);
 
-        var myGrid = new Grid(10, 10);
+        var myGrid = GameScene.sceneGrid;
 
-        var myRoad = new Array();
+        var myRoad = GameScene.sceneRoad;
 
-        var myMap = new TileMap(myGrid);
+        var myMap = GameScene.sceneMap;
         this.addChild(myMap);
 
         var player = new Player();
@@ -229,10 +222,12 @@ class Main extends egret.DisplayObjectContainer {
         GameScene.setPlayer(player);
         this.touchEnabled = true;
 
-
-
         //this.stage
         myMap.addEventListener(egret.TouchEvent.TOUCH_TAP, (e: egret.TouchEvent) => {
+
+            //var disNpc_0 = Math.sqrt(Math.pow(e.stageX - 640 / 4, 2) + Math.pow(e.stageY - 1236 / 2, 2));
+            // var disNpc_1 = Math.sqrt(Math.pow(e.stageX - 640 / 2.5, 2) + Math.pow(e.stageY - 1236 / 4, 2));
+
             function getWalkCommand() {
                 console.log("tap_px " + e.stageX + "," + e.stageY);
                 myMap.grid.setEndPoint(Math.floor(e.stageX / Main.TILESIZE), Math.floor(e.stageY / Main.TILESIZE));
@@ -240,9 +235,21 @@ class Main extends egret.DisplayObjectContainer {
                 myRoad = myMap.findPath();
                 if (myRoad == null) {
 
-                    console.log("error tip stay");
+                    console.log("error tap stay");
                     return
                 }
+                /*
+                if (disNpc_0 <= 4) {
+
+                    console.log("NPC_0 around")
+                }
+
+                if (disNpc_1 <= 4) {
+
+                    console.log("NPC_1 around")
+
+                }
+                */
                 for (var i = 0; i < myRoad.length; i++) {
 
                     GameScene.commandList.addCommand(new WalkCommand(myRoad[i].x * Main.TILESIZE + Main.TILESIZE / 2,
@@ -251,6 +258,7 @@ class Main extends egret.DisplayObjectContainer {
                 GameScene.commandList.execute();
             }
 
+
             if (GameScene.commandList.isFinishedFlag) {
                 getWalkCommand();
 
@@ -258,7 +266,6 @@ class Main extends egret.DisplayObjectContainer {
             } else {
                 GameScene.commandList.cancel();
                 getWalkCommand();
-
             }
 
 
@@ -267,10 +274,6 @@ class Main extends egret.DisplayObjectContainer {
         this.initTaskSystem(this.stage.stageWidth, this.stage.stageHeight);
         this.initUserPanel();
     }
-
-
-
-
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.

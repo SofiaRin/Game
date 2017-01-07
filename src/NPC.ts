@@ -8,11 +8,17 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
 
     private dialoguePanel: DialoguePanel;
 
-    constructor(_id: string) {
+    private npcMapPosX;
+
+    private npcMapPosY;
+
+    constructor(_id: string, _npcMapPosX: number, _npcMapPosY: number) {
 
         super();
 
         this.id = _id;
+        this.npcMapPosX = _npcMapPosX;
+        this.npcMapPosY = _npcMapPosY;
 
         this.emoji = this.createBitmapByName(_id + "_nullIcon_png");
         console.log("Building " + _id)
@@ -114,12 +120,30 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
         this.touchEnabled = true;
 
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-
-            var panelTw = egret.Tween.get(this.dialoguePanel);
-            panelTw.to({ "alpha": 1 }, 600);
-            this.dialoguePanel.touchEnabled = true;
             console.log("Tap_" + this.id);
 
+            GameScene.sceneGrid.setEndPoint(Math.floor(this.npcMapPosX / GameScene.TILESIZE),
+                Math.floor(this.npcMapPosY / GameScene.TILESIZE));
+
+            GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE),
+                Math.floor(GameScene.player.y / GameScene.TILESIZE));
+
+            GameScene.sceneRoad = GameScene.sceneMap.findPath();
+            if (GameScene.sceneRoad == null) {
+
+                console.log("error tap stay");
+                return
+            }
+            for (var i = 0; i < GameScene.sceneRoad.length; i++) {
+
+                GameScene.commandList.addCommand(new WalkCommand(
+                    GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
+                    GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+            }
+
+            GameScene.commandList.addCommand(new TalkCommand(this.dialoguePanel))
+
+            GameScene.commandList.execute();
 
         }, this);
 

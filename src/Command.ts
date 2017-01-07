@@ -56,10 +56,16 @@ class FightCommand implements Command {
 }
 
 class TalkCommand implements Command {
-
-
+    private targetPanel: egret.DisplayObjectContainer;
+    constructor(_targetPanel: egret.DisplayObjectContainer) {
+        this.targetPanel = _targetPanel;
+    }
     execute(callback: Function): void {
         console.log("打开对话框")
+        var panelTw = egret.Tween.get(this.targetPanel);
+        panelTw.to({ "alpha": 1 }, 600);
+        this.targetPanel.touchEnabled = true;
+
         egret.setTimeout(function () {
             console.log("结束对话")
             callback();

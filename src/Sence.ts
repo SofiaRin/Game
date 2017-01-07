@@ -2,16 +2,25 @@ class GameScene {
 
 
     private static scene: GameScene;
+    //
+    public static sceneGrid:Grid;
+    public static sceneRoad;
+    public static sceneMap:TileMap;
+
+
+
     public static canMovetoNext:boolean;
     public static player: Player;
-    private roadInfo;
-    private static TILESIZE = 64;
+    public static TILESIZE = 64;
     public static commandList:CommandList;
 
 
     public static replaceScene(scene: GameScene) {
         GameScene.scene = scene;
         this.commandList = new CommandList();
+        GameScene.sceneGrid = new Grid(10,10);
+        GameScene.sceneRoad = new Array();
+        GameScene.sceneMap = new TileMap(GameScene.sceneGrid);
     }
 
     public static setPlayer(_player: Player) {
