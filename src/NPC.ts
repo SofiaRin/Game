@@ -121,15 +121,18 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
 
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
             console.log("Tap_" + this.id);
+       
+           var isNeed = GameScene.needMovetoNpc(this.npcMapPosX, this.npcMapPosY);
+            if (isNeed) {
+                GameScene.sceneFindRoad(this.npcMapPosX, this.npcMapPosY);
+                for (var i = 0; i < GameScene.sceneRoad.length; i++) {
 
-            GameScene.sceneFindRoad(this.npcMapPosX,this.npcMapPosY);
-            for (var i = 0; i < GameScene.sceneRoad.length; i++) {
+                    GameScene.commandList.addCommand(new WalkCommand(
+                        GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
+                        GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+                }
 
-                GameScene.commandList.addCommand(new WalkCommand(
-                    GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
-                    GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
-            }
-
+           }
             GameScene.commandList.addCommand(new TalkCommand(this.dialoguePanel))
 
             GameScene.commandList.execute();

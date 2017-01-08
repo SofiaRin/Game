@@ -2,6 +2,7 @@ var DialoguePanel = (function (_super) {
     __extends(DialoguePanel, _super);
     function DialoguePanel(_npcid) {
         _super.call(this);
+        this.endTalkFlag = false;
         this.dialoguePanelBg = this.createBitmapByName("DialogueBg_png");
         this.addChild(this.dialoguePanelBg);
         this.btn_Accept = this.createBitmapByName("Accept_png");
@@ -14,6 +15,11 @@ var DialoguePanel = (function (_super) {
         this.btn_Finish.x = 0;
         this.btn_Finish.y = 100;
         this.btn_Finish.$setTouchEnabled(true);
+        this.btn_Close = this.createBitmapByName("Close_s_png");
+        this.addChild(this.btn_Close);
+        this.btn_Close.x = 220;
+        this.btn_Close.y = 0;
+        this.btn_Close.$setTouchEnabled(true);
         this.currentTask = new egret.TextField();
         this.initDialog(_npcid, this.currentTask);
         this.onDialogPanelClicked(_npcid);
@@ -48,6 +54,11 @@ var DialoguePanel = (function (_super) {
         this.dialoguePanelBg.$setTouchEnabled(true);
         this.dialoguePanelBg.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             console.log("DialogBGClick");
+        }, this);
+        this.btn_Close.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            console.log("Close");
+            _this.visible = false;
+            _this.endTalkFlag = true;
         }, this);
         this.btn_Accept.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             _this.initDialog(_npcid, _this.currentTask);

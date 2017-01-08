@@ -43,7 +43,7 @@ class FightCommand implements Command {
     execute(callback: Function): void {
 
         console.log("开始战斗");
-        var atkMonsterId =this.monsterId
+        var atkMonsterId = this.monsterId
         var menu = TaskService.getInstance();
         menu.getTaskByCustomRule(function sortForMonster(taskInfo) {
 
@@ -73,20 +73,28 @@ class FightCommand implements Command {
 }
 
 class TalkCommand implements Command {
-    private targetPanel: egret.DisplayObjectContainer;
-    constructor(_targetPanel: egret.DisplayObjectContainer) {
+    private targetPanel: DialoguePanel;
+    constructor(_targetPanel: DialoguePanel) {
         this.targetPanel = _targetPanel;
     }
     execute(callback: Function): void {
+        if (this.targetPanel.endTalkFlag) {
+            console.log("结束对话")
+            this.targetPanel.endTalkFlag = false;
+            callback();
+            return
+        }
+
         console.log("打开对话框")
+        this.targetPanel.visible = true;
         var panelTw = egret.Tween.get(this.targetPanel);
         panelTw.to({ "alpha": 1 }, 600);
         this.targetPanel.touchEnabled = true;
 
-        egret.setTimeout(function () {
-            console.log("结束对话")
-            callback();
-        }, this, 500)
+
+
+
+
     }
 
     cancel(callback: Function) {

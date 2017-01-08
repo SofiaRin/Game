@@ -15,6 +15,15 @@ var GameScene = (function () {
     GameScene.getCurrentScene = function () {
         return GameScene.scene;
     };
+    GameScene.needMovetoNpc = function (_endPointX, _endPointY) {
+        if (_endPointX / GameScene.TILESIZE != GameScene.player.x / GameScene.TILESIZE &&
+            _endPointY / GameScene.TILESIZE != GameScene.player.y / GameScene.TILESIZE) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
     GameScene.sceneFindRoad = function (_endPointX, _endPointY) {
         GameScene.sceneGrid.setEndPoint(Math.floor(_endPointX / GameScene.TILESIZE), Math.floor(_endPointY / GameScene.TILESIZE));
         GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE), Math.floor(GameScene.player.y / GameScene.TILESIZE));

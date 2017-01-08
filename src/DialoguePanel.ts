@@ -2,13 +2,14 @@ class DialoguePanel extends egret.DisplayObjectContainer {
 
     private btn_Accept: egret.Bitmap;
     private btn_Finish: egret.Bitmap;
+    private btn_Close: egret.Bitmap;
     private dialoguePanelBg: egret.Bitmap;
     private currentTask: egret.TextField;
-
+    public endTalkFlag :boolean
 
     constructor(_npcid: string) {
         super();
-
+        this.endTalkFlag = false;
 
         this.dialoguePanelBg = this.createBitmapByName("DialogueBg_png");
         this.addChild(this.dialoguePanelBg);
@@ -26,7 +27,14 @@ class DialoguePanel extends egret.DisplayObjectContainer {
         this.btn_Finish.y = 100
         this.btn_Finish.$setTouchEnabled(true);
 
-        this.currentTask =new egret.TextField();
+        this.btn_Close = this.createBitmapByName("Close_s_png");
+        this.addChild(this.btn_Close)
+        this.btn_Close.x = 220
+        this.btn_Close.y = 0
+        this.btn_Close.$setTouchEnabled(true);
+
+
+        this.currentTask = new egret.TextField();
         this.initDialog(_npcid, this.currentTask)
 
 
@@ -46,7 +54,7 @@ class DialoguePanel extends egret.DisplayObjectContainer {
 
     private initDialog(_npcid: string, _currentText: egret.TextField) {
 
-        
+
         //_currentText.text = "Wait for init"
         _currentText.text = "";
         this.addChild(_currentText);
@@ -63,7 +71,7 @@ class DialoguePanel extends egret.DisplayObjectContainer {
                 if (taskInfo[t].fromNpcId == _npcid || taskInfo[t].toNpcId == _npcid) {
 
 
-                    _currentText.text += "Task: " + taskInfo[t].id + "\n" ;//+ " Status: " + taskInfo[t].status + "\n";
+                    _currentText.text += "Task: " + taskInfo[t].id + "\n";//+ " Status: " + taskInfo[t].status + "\n";
 
 
                 }
@@ -81,6 +89,15 @@ class DialoguePanel extends egret.DisplayObjectContainer {
 
             console.log("DialogBGClick");
 
+
+        }, this);
+
+        this.btn_Close.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+
+
+            console.log("Close");
+            this.visible = false;
+            this.endTalkFlag = true;
         }, this);
 
 

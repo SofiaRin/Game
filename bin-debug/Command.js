@@ -54,14 +54,17 @@ var TalkCommand = (function () {
     }
     var d = __define,c=TalkCommand,p=c.prototype;
     p.execute = function (callback) {
+        if (this.targetPanel.endTalkFlag) {
+            console.log("结束对话");
+            this.targetPanel.endTalkFlag = false;
+            callback();
+            return;
+        }
         console.log("打开对话框");
+        this.targetPanel.visible = true;
         var panelTw = egret.Tween.get(this.targetPanel);
         panelTw.to({ "alpha": 1 }, 600);
         this.targetPanel.touchEnabled = true;
-        egret.setTimeout(function () {
-            console.log("结束对话");
-            callback();
-        }, this, 500);
     };
     p.cancel = function (callback) {
         console.log("关闭对话框");

@@ -3,22 +3,22 @@ class GameScene {
 
     private static scene: GameScene;
     //
-    public static sceneGrid:Grid;
+    public static sceneGrid: Grid;
     public static sceneRoad;
-    public static sceneMap:TileMap;
+    public static sceneMap: TileMap;
 
 
 
-    public static canMovetoNext:boolean;
+    public static canMovetoNext: boolean;
     public static player: Player;
     public static TILESIZE = 64;
-    public static commandList:CommandList;
+    public static commandList: CommandList;
 
 
     public static replaceScene(scene: GameScene) {
         GameScene.scene = scene;
         this.commandList = new CommandList();
-        GameScene.sceneGrid = new Grid(10,10);
+        GameScene.sceneGrid = new Grid(10, 10);
         GameScene.sceneRoad = new Array();
         GameScene.sceneMap = new TileMap(GameScene.sceneGrid);
     }
@@ -31,23 +31,35 @@ class GameScene {
         return GameScene.scene;
     }
 
-    public static sceneFindRoad(_endPointX:number,_endPointY:number){
-        GameScene.sceneGrid.setEndPoint(Math.floor(_endPointX / GameScene.TILESIZE),
-                Math.floor(_endPointY / GameScene.TILESIZE));
+    public static needMovetoNpc(_endPointX: number, _endPointY: number) {
+        if (_endPointX / GameScene.TILESIZE != GameScene.player.x/ GameScene.TILESIZE &&
+            _endPointY / GameScene.TILESIZE != GameScene.player.y/ GameScene.TILESIZE){
 
-            GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE),
-                Math.floor(GameScene.player.y / GameScene.TILESIZE));
+                    return true;
+        }else{
 
-            GameScene.sceneRoad = GameScene.sceneMap.findPath();
-            if (GameScene.sceneRoad == null) {
-
-                console.log("error tap stay");
-                return
-            }
+            return false;
+        }
 
 
     }
-  
+    public static sceneFindRoad(_endPointX: number, _endPointY: number) {
+        GameScene.sceneGrid.setEndPoint(Math.floor(_endPointX / GameScene.TILESIZE),
+            Math.floor(_endPointY / GameScene.TILESIZE));
+
+        GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE),
+            Math.floor(GameScene.player.y / GameScene.TILESIZE));
+
+        GameScene.sceneRoad = GameScene.sceneMap.findPath();
+        if (GameScene.sceneRoad == null) {
+
+            console.log("error tap stay");
+            return
+        }
+
+
+    }
+
 
     public moveTo(x: number, y: number, callback: Function) {
         /*
@@ -89,19 +101,19 @@ class GameScene {
         }
          var myRoad = this.roadInfo;
         */
-        
-       
+
+
         console.log("开始移动")
         //isStartJudge = true;
-        GameScene.player.move(new Vector2(x,y));
+        GameScene.player.move(new Vector2(x, y));
         //moveJudge();
         egret.setTimeout(function () {
-            if(GameScene.canMovetoNext){
+            if (GameScene.canMovetoNext) {
                 console.log("结束移动")
                 callback();
             }
         }, this, 500)
-        
+
     }
 
 

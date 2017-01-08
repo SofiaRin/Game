@@ -73,9 +73,12 @@ var NPC = (function (_super) {
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             console.log("Tap_" + _this.id);
-            GameScene.sceneFindRoad(_this.npcMapPosX, _this.npcMapPosY);
-            for (var i = 0; i < GameScene.sceneRoad.length; i++) {
-                GameScene.commandList.addCommand(new WalkCommand(GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2, GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+            var isNeed = GameScene.needMovetoNpc(_this.npcMapPosX, _this.npcMapPosY);
+            if (isNeed) {
+                GameScene.sceneFindRoad(_this.npcMapPosX, _this.npcMapPosY);
+                for (var i = 0; i < GameScene.sceneRoad.length; i++) {
+                    GameScene.commandList.addCommand(new WalkCommand(GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2, GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+                }
             }
             GameScene.commandList.addCommand(new TalkCommand(_this.dialoguePanel));
             GameScene.commandList.execute();
