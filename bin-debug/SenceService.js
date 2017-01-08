@@ -27,29 +27,29 @@ var SenceService = (function () {
 egret.registerClass(SenceService,'SenceService');
 var KillMonsterButton = (function (_super) {
     __extends(KillMonsterButton, _super);
-    function KillMonsterButton(_monsterId) {
+    function KillMonsterButton(_monsterId, _monsterMapPosX, _monsterMapPosY) {
         _super.call(this);
         this.monsterId = _monsterId;
         this.button = this.createBitmapByName("Kill_png");
         this.addChild(this.button);
         this.onButtonClick(_monsterId);
+        this.monsterMapPosX = _monsterMapPosX;
+        this.monsterMapPosY = _monsterMapPosY;
     }
     var d = __define,c=KillMonsterButton,p=c.prototype;
     p.onChange = function () {
     };
     p.onButtonClick = function (_monsterId) {
+        var _this = this;
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            var menu = TaskService.getInstance();
-            menu.getTaskByCustomRule(function sortForMonster(taskInfo) {
-                for (var t in taskInfo) {
-                    if (taskInfo[t].condition.tragetMonsterId == _monsterId && taskInfo[t].status == TaskStatus.DURING) {
-                        SenceService.getInstance().notify(_monsterId);
-                        taskInfo[t].condition.updateProgress(taskInfo[t]);
-                    }
-                }
-                console.log("Monster Kill Tap");
-            });
+            console.log("Monster Kill Tap");
+            GameScene.sceneFindRoad(_this.monsterMapPosX, _this.monsterMapPosY);
+            for (var i = 0; i < GameScene.sceneRoad.length; i++) {
+                GameScene.commandList.addCommand(new WalkCommand(GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2, GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+            }
+            GameScene.commandList.addCommand(new FightCommand(_this.monsterId));
+            GameScene.commandList.execute();
         }, this);
     };
     p.createBitmapByName = function (name) {

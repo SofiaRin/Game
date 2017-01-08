@@ -99,7 +99,7 @@ var Main = (function (_super) {
     p.initTaskSystem = function (stageH, stageW) {
         var task02 = new Task("002", "Kill 4 pigs", "Tap button", "npc_1", "npc_1", TaskStatus.UNACCEPTABLE, new KillMonsterTaskCondition("B27"), 4, null);
         var task01 = new Task("001", "Welcome to the World of Warcraft", "Click the whiteMan", "npc_0", "npc_1", TaskStatus.ACCEPTABLE, new NPCTalkTaskCondition(), 1, task02);
-        var monster_0 = new KillMonsterButton("B27");
+        var monster_0 = new KillMonsterButton("B27", 0, stageH / 2);
         this.addChild(monster_0);
         monster_0.scaleX = 0.5;
         monster_0.scaleY = 0.5;
@@ -169,8 +169,8 @@ var Main = (function (_super) {
         this.touchEnabled = true;
         //this.stage
         myMap.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
-            //var disNpc_0 = Math.sqrt(Math.pow(e.stageX - 640 / 4, 2) + Math.pow(e.stageY - 1236 / 2, 2));
-            // var disNpc_1 = Math.sqrt(Math.pow(e.stageX - 640 / 2.5, 2) + Math.pow(e.stageY - 1236 / 4, 2));
+            var disNpc_0 = Math.sqrt(Math.pow(e.stageX - 640 / 4, 2) + Math.pow(e.stageY - 1236 / 2, 2));
+            var disNpc_1 = Math.sqrt(Math.pow(e.stageX - 640 / 2.5, 2) + Math.pow(e.stageY - 1236 / 4, 2));
             function getWalkCommand() {
                 console.log("tap_px " + e.stageX + "," + e.stageY);
                 myMap.grid.setEndPoint(Math.floor(e.stageX / Main.TILESIZE), Math.floor(e.stageY / Main.TILESIZE));
@@ -180,18 +180,12 @@ var Main = (function (_super) {
                     console.log("error tap stay");
                     return;
                 }
-                /*
                 if (disNpc_0 <= 4) {
-
-                    console.log("NPC_0 around")
+                    console.log("NPC_0 around");
                 }
-
                 if (disNpc_1 <= 4) {
-
-                    console.log("NPC_1 around")
-
+                    console.log("NPC_1 around");
                 }
-                */
                 for (var i = 0; i < myRoad.length; i++) {
                     GameScene.commandList.addCommand(new WalkCommand(myRoad[i].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[i].y * Main.TILESIZE + Main.TILESIZE / 2));
                 }

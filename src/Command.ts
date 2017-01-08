@@ -32,17 +32,34 @@ class FightCommand implements Command {
     /**
      * 所有的 Command 都需要有这个标记，应该如何封装处理这个问题呢？
      */
+    private monsterId: string;
+
+    constructor(_monsterId) {
+
+        this.monsterId = _monsterId;
+    }
     private _hasBeenCancelled = false;
 
     execute(callback: Function): void {
 
-        console.log("开始战斗")
-        egret.setTimeout(() => {
-            if (!this._hasBeenCancelled) {
-                console.log("结束战斗")
-                callback();
+        console.log("开始战斗");
+        var atkMonsterId =this.monsterId
+        var menu = TaskService.getInstance();
+        menu.getTaskByCustomRule(function sortForMonster(taskInfo) {
+
+            for (var t in taskInfo) {
+                if (taskInfo[t].condition.tragetMonsterId == atkMonsterId && taskInfo[t].status == TaskStatus.DURING) {
+
+                    SenceService.getInstance().notify(atkMonsterId);
+                    taskInfo[t].condition.updateProgress(taskInfo[t]);
+
+                }
             }
-        }, this, 500)
+        }
+        )
+        console.log("结束战斗")
+        callback();
+
     }
 
     cancel(callback: Function) {

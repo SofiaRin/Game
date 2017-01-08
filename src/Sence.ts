@@ -31,6 +31,22 @@ class GameScene {
         return GameScene.scene;
     }
 
+    public static sceneFindRoad(_endPointX:number,_endPointY:number){
+        GameScene.sceneGrid.setEndPoint(Math.floor(_endPointX / GameScene.TILESIZE),
+                Math.floor(_endPointY / GameScene.TILESIZE));
+
+            GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE),
+                Math.floor(GameScene.player.y / GameScene.TILESIZE));
+
+            GameScene.sceneRoad = GameScene.sceneMap.findPath();
+            if (GameScene.sceneRoad == null) {
+
+                console.log("error tap stay");
+                return
+            }
+
+
+    }
   
 
     public moveTo(x: number, y: number, callback: Function) {

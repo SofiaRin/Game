@@ -18,22 +18,25 @@ var WalkCommand = (function () {
 }());
 egret.registerClass(WalkCommand,'WalkCommand',["Command"]);
 var FightCommand = (function () {
-    function FightCommand() {
-        /**
-         * 所有的 Command 都需要有这个标记，应该如何封装处理这个问题呢？
-         */
+    function FightCommand(_monsterId) {
         this._hasBeenCancelled = false;
+        this.monsterId = _monsterId;
     }
     var d = __define,c=FightCommand,p=c.prototype;
     p.execute = function (callback) {
-        var _this = this;
         console.log("开始战斗");
-        egret.setTimeout(function () {
-            if (!_this._hasBeenCancelled) {
-                console.log("结束战斗");
-                callback();
+        var atkMonsterId = this.monsterId;
+        var menu = TaskService.getInstance();
+        menu.getTaskByCustomRule(function sortForMonster(taskInfo) {
+            for (var t in taskInfo) {
+                if (taskInfo[t].condition.tragetMonsterId == atkMonsterId && taskInfo[t].status == TaskStatus.DURING) {
+                    SenceService.getInstance().notify(atkMonsterId);
+                    taskInfo[t].condition.updateProgress(taskInfo[t]);
+                }
             }
-        }, this, 500);
+        });
+        console.log("结束战斗");
+        callback();
     };
     p.cancel = function (callback) {
         console.log("脱离战斗");

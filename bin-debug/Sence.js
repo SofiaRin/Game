@@ -15,6 +15,15 @@ var GameScene = (function () {
     GameScene.getCurrentScene = function () {
         return GameScene.scene;
     };
+    GameScene.sceneFindRoad = function (_endPointX, _endPointY) {
+        GameScene.sceneGrid.setEndPoint(Math.floor(_endPointX / GameScene.TILESIZE), Math.floor(_endPointY / GameScene.TILESIZE));
+        GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE), Math.floor(GameScene.player.y / GameScene.TILESIZE));
+        GameScene.sceneRoad = GameScene.sceneMap.findPath();
+        if (GameScene.sceneRoad == null) {
+            console.log("error tap stay");
+            return;
+        }
+    };
     p.moveTo = function (x, y, callback) {
         /*
         var index = 1;

@@ -73,13 +73,7 @@ var NPC = (function (_super) {
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             console.log("Tap_" + _this.id);
-            GameScene.sceneGrid.setEndPoint(Math.floor(_this.npcMapPosX / GameScene.TILESIZE), Math.floor(_this.npcMapPosY / GameScene.TILESIZE));
-            GameScene.sceneGrid.setStartPoint(Math.floor(GameScene.player.x / GameScene.TILESIZE), Math.floor(GameScene.player.y / GameScene.TILESIZE));
-            GameScene.sceneRoad = GameScene.sceneMap.findPath();
-            if (GameScene.sceneRoad == null) {
-                console.log("error tap stay");
-                return;
-            }
+            GameScene.sceneFindRoad(_this.npcMapPosX, _this.npcMapPosY);
             for (var i = 0; i < GameScene.sceneRoad.length; i++) {
                 GameScene.commandList.addCommand(new WalkCommand(GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2, GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
             }

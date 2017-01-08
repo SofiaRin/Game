@@ -46,8 +46,10 @@ class KillMonsterButton extends egret.DisplayObjectContainer implements Observer
 
     private monsterId: string;
     private button: egret.Bitmap;
+    private monsterMapPosX:number;
+    private monsterMapPosY:number;
 
-    constructor(_monsterId: string) {
+    constructor(_monsterId: string, _monsterMapPosX: number, _monsterMapPosY) {
 
         super();
 
@@ -56,6 +58,9 @@ class KillMonsterButton extends egret.DisplayObjectContainer implements Observer
         this.button = this.createBitmapByName("Kill_png");
         this.addChild(this.button);
         this.onButtonClick(_monsterId);
+
+        this.monsterMapPosX = _monsterMapPosX;
+        this.monsterMapPosY = _monsterMapPosY;
     }
 
     onChange() {
@@ -68,24 +73,21 @@ class KillMonsterButton extends egret.DisplayObjectContainer implements Observer
 
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
 
-            var menu = TaskService.getInstance();
+            console.log("Monster Kill Tap");
+            GameScene.sceneFindRoad(this.monsterMapPosX,this.monsterMapPosY);
 
-            menu.getTaskByCustomRule(function sortForMonster(taskInfo) {
+             for (var i = 0; i < GameScene.sceneRoad.length; i++) {
 
-                for (var t in taskInfo) {
-                    if (taskInfo[t].condition.tragetMonsterId == _monsterId && taskInfo[t].status == TaskStatus.DURING) {
-                        
-                    SenceService.getInstance().notify(_monsterId);
-                    taskInfo[t].condition.updateProgress(taskInfo[t]);
-
-                    }
-
-                }
-                console.log("Monster Kill Tap");
+                GameScene.commandList.addCommand(new WalkCommand(
+                    GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
+                    GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
             }
-            )
 
-            
+            GameScene.commandList.addCommand(new FightCommand(this.monsterId));
+            GameScene.commandList.execute();
+           
+
+
 
         }, this);
 
