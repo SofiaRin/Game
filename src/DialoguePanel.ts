@@ -10,7 +10,7 @@ class DialoguePanel extends egret.DisplayObjectContainer {
     constructor(_npcid: string) {
         super();
         this.endTalkFlag = false;
-
+       this.visible = false;
         this.dialoguePanelBg = this.createBitmapByName("DialogueBg_png");
         this.addChild(this.dialoguePanelBg);
 

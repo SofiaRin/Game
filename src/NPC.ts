@@ -112,30 +112,43 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
 
 
 
+    private npcRespendCommand() {
+        //var isNeed = GameScene.needMovetoNpc(this.npcMapPosX, this.npcMapPosY);
+      //  if (isNeed) {
+            GameScene.sceneFindRoad(this.npcMapPosX, this.npcMapPosY);
+            for (var i = 0; i < GameScene.sceneRoad.length; i++) {
 
+                GameScene.commandList.addCommand(new WalkCommand(
+                    GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
+                    GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+            }
+
+        //}
+        GameScene.commandList.addCommand(new TalkCommand(this.dialoguePanel))
+
+        GameScene.commandList.execute();
+    }
 
 
     private onNpcClick() {
 
         this.touchEnabled = true;
-
+        
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
             console.log("Tap_" + this.id);
-       
-           var isNeed = GameScene.needMovetoNpc(this.npcMapPosX, this.npcMapPosY);
-            if (isNeed) {
-                GameScene.sceneFindRoad(this.npcMapPosX, this.npcMapPosY);
-                for (var i = 0; i < GameScene.sceneRoad.length; i++) {
 
-                    GameScene.commandList.addCommand(new WalkCommand(
-                        GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
-                        GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
-                }
 
-           }
-            GameScene.commandList.addCommand(new TalkCommand(this.dialoguePanel))
 
-            GameScene.commandList.execute();
+
+            if (GameScene.commandList.isFinishedFlag) {
+                this.npcRespendCommand();
+
+
+            } else {
+                GameScene.commandList.cancel();
+                this.npcRespendCommand();
+
+            }
 
         }, this);
 

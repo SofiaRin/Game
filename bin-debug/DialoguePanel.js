@@ -3,6 +3,7 @@ var DialoguePanel = (function (_super) {
     function DialoguePanel(_npcid) {
         _super.call(this);
         this.endTalkFlag = false;
+        this.visible = false;
         this.dialoguePanelBg = this.createBitmapByName("DialogueBg_png");
         this.addChild(this.dialoguePanelBg);
         this.btn_Accept = this.createBitmapByName("Accept_png");

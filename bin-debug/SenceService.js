@@ -44,13 +44,22 @@ var KillMonsterButton = (function (_super) {
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             console.log("Monster Kill Tap");
-            GameScene.sceneFindRoad(_this.monsterMapPosX, _this.monsterMapPosY);
-            for (var i = 0; i < GameScene.sceneRoad.length; i++) {
-                GameScene.commandList.addCommand(new WalkCommand(GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2, GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+            if (GameScene.commandList.isFinishedFlag) {
+                _this.getWalkCommand();
             }
-            GameScene.commandList.addCommand(new FightCommand(_this.monsterId));
-            GameScene.commandList.execute();
+            else {
+                GameScene.commandList.cancel();
+                _this.getWalkCommand();
+            }
         }, this);
+    };
+    p.getWalkCommand = function () {
+        GameScene.sceneFindRoad(this.monsterMapPosX, this.monsterMapPosY);
+        for (var i = 0; i < GameScene.sceneRoad.length; i++) {
+            GameScene.commandList.addCommand(new WalkCommand(GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2, GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+        }
+        GameScene.commandList.addCommand(new FightCommand(this.monsterId));
+        GameScene.commandList.execute();
     };
     p.createBitmapByName = function (name) {
         var result = new egret.Bitmap();

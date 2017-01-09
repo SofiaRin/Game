@@ -32,12 +32,11 @@ class GameScene {
     }
 
     public static needMovetoNpc(_endPointX: number, _endPointY: number) {
-        if (_endPointX / GameScene.TILESIZE != GameScene.player.x/ GameScene.TILESIZE &&
-            _endPointY / GameScene.TILESIZE != GameScene.player.y/ GameScene.TILESIZE){
+        if (_endPointX / GameScene.TILESIZE != GameScene.player.x / GameScene.TILESIZE &&
+            _endPointY / GameScene.TILESIZE != GameScene.player.y / GameScene.TILESIZE) {
 
-                    return true;
-        }else{
-
+            return true;
+        } else {
             return false;
         }
 
@@ -108,11 +107,21 @@ class GameScene {
         GameScene.player.move(new Vector2(x, y));
         //moveJudge();
         egret.setTimeout(function () {
+
+            egret.setTimeout(() => {
+                if (!GameScene.canMovetoNext) {
+                    GameScene.canMovetoNext = true;
+                }
+
+            }, this, 3000);
+
+
             if (GameScene.canMovetoNext) {
                 console.log("结束移动")
                 callback();
             }
         }, this, 500)
+
 
     }
 

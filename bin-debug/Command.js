@@ -61,12 +61,14 @@ var TalkCommand = (function () {
             return;
         }
         console.log("打开对话框");
+        this.targetPanel.alpha = 0;
         this.targetPanel.visible = true;
         var panelTw = egret.Tween.get(this.targetPanel);
         panelTw.to({ "alpha": 1 }, 600);
         this.targetPanel.touchEnabled = true;
     };
     p.cancel = function (callback) {
+        this.targetPanel.visible = false;
         console.log("关闭对话框");
     };
     return TalkCommand;

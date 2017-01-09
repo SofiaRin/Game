@@ -266,6 +266,7 @@ class Main extends egret.DisplayObjectContainer {
             } else {
                 GameScene.commandList.cancel();
                 getWalkCommand();
+                
             }
 
 

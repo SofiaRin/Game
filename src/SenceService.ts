@@ -46,8 +46,8 @@ class KillMonsterButton extends egret.DisplayObjectContainer implements Observer
 
     private monsterId: string;
     private button: egret.Bitmap;
-    private monsterMapPosX:number;
-    private monsterMapPosY:number;
+    private monsterMapPosX: number;
+    private monsterMapPosY: number;
 
     constructor(_monsterId: string, _monsterMapPosX: number, _monsterMapPosY) {
 
@@ -74,22 +74,37 @@ class KillMonsterButton extends egret.DisplayObjectContainer implements Observer
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
 
             console.log("Monster Kill Tap");
-            GameScene.sceneFindRoad(this.monsterMapPosX,this.monsterMapPosY);
 
-             for (var i = 0; i < GameScene.sceneRoad.length; i++) {
 
-                GameScene.commandList.addCommand(new WalkCommand(
-                    GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
-                    GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+
+            if (GameScene.commandList.isFinishedFlag) {
+                this.getWalkCommand();
+
+
+            } else {
+                GameScene.commandList.cancel();
+                this.getWalkCommand();
+
             }
-
-            GameScene.commandList.addCommand(new FightCommand(this.monsterId));
-            GameScene.commandList.execute();
-           
 
 
 
         }, this);
+
+    }
+
+    private getWalkCommand() {
+        GameScene.sceneFindRoad(this.monsterMapPosX, this.monsterMapPosY);
+
+        for (var i = 0; i < GameScene.sceneRoad.length; i++) {
+
+            GameScene.commandList.addCommand(new WalkCommand(
+                GameScene.sceneRoad[i].x * GameScene.TILESIZE + GameScene.TILESIZE / 2,
+                GameScene.sceneRoad[i].y * GameScene.TILESIZE + GameScene.TILESIZE / 2));
+        }
+
+        GameScene.commandList.addCommand(new FightCommand(this.monsterId));
+        GameScene.commandList.execute();
 
     }
 

@@ -78,6 +78,11 @@ var GameScene = (function () {
         GameScene.player.move(new Vector2(x, y));
         //moveJudge();
         egret.setTimeout(function () {
+            egret.setTimeout(function () {
+                if (!GameScene.canMovetoNext) {
+                    GameScene.canMovetoNext = true;
+                }
+            }, this, 3000);
             if (GameScene.canMovetoNext) {
                 console.log("结束移动");
                 callback();

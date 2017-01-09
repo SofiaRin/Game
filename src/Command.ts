@@ -86,6 +86,7 @@ class TalkCommand implements Command {
         }
 
         console.log("打开对话框")
+        this.targetPanel.alpha = 0;
         this.targetPanel.visible = true;
         var panelTw = egret.Tween.get(this.targetPanel);
         panelTw.to({ "alpha": 1 }, 600);
@@ -98,6 +99,8 @@ class TalkCommand implements Command {
     }
 
     cancel(callback: Function) {
+        this.targetPanel.visible = false;
         console.log("关闭对话框");
+        
     }
 }
