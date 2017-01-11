@@ -285,14 +285,6 @@ class Main extends egret.DisplayObjectContainer {
         result.texture = texture;
         return result;
     }
-    /**
-     * 切换描述内容
-     * Switch to described content
-     
-    private changeDescription(textfield: egret.TextField, textFlow: Array<egret.ITextElement>): void {
-        textfield.textFlow = textFlow;
-    }
-     */
 }
 
 
